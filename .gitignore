@@ -1,0 +1,8 @@
+### TypeScript ###
+*.ts
+
+### JSON ###
+*.json
+
+### Node ###
+node_modules
