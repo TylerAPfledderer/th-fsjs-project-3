@@ -102,3 +102,83 @@ document.querySelector("#payment").addEventListener("change", event => {
         display.hidden = true;
     });
 });
+// ================ //
+//        Form      //
+//     Validation   //
+// ================ //
+// Grab 
+const form = document.querySelector("form");
+const nameInput = document.querySelector("#name");
+const emailInput = document.querySelector("#email");
+const activitiesBox = document.querySelector("#activities-box");
+const ccInput = {
+    ccNumber: document.querySelector("#cc-num"),
+    ccZip: document.querySelector("#zip"),
+    ccCVV: document.querySelector("#cvv")
+};
+const { ccNumber, ccZip, ccCVV } = ccInput;
+// Function to update error or success styling on validation check
+const validStyle = (containerEl, bool) => {
+    // Store class name based of validation boolean
+    const selectorName = bool ? "valid" : "not-valid";
+    // Store display style of the error hint based on boolean
+    const displayStyle = bool ? "none" : "unset";
+    // Check if a validation class is already attached to activity container
+    const classExist = containerEl.classList.contains("valid") || containerEl.classList.contains("not-valid");
+    // Store the opposite class of the validation bool param
+    const prevSelector = !bool ? "valid" : "not-valid";
+    // Run proper TolkenList method to update validation class if one is already attached or not
+    !classExist ? containerEl.classList.add(selectorName) : containerEl.classList.replace(prevSelector, selectorName);
+    // Provide display style to the error hint element
+    containerEl.lastElementChild.style.display = displayStyle;
+};
+// Declare variable that will store returned validation boolean
+let valid;
+// Validation checks on keyup in required text fields
+form.addEventListener("keyup", ({ target }) => {
+    // Run validations depending on input typed in
+    if (target === nameInput) {
+        valid = /^\S/g.test(target.value) && target.value !== '';
+    }
+    if (target === emailInput) {
+        valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(emailInput.value);
+    }
+    if (target === ccNumber) {
+        valid = /^[0-9]{13,16}$/.test(ccNumber.value);
+    }
+    if (target === ccZip) {
+        valid = /^[0-9]{5}$/.test(ccZip.value);
+    }
+    if (target === ccCVV) {
+        valid = /^[0-9]{3}$/.test(ccCVV.value);
+    }
+    // Update validation class for the target's parent element
+    validStyle(target.parentElement, valid);
+});
+form.addEventListener("submit", event => {
+    // Store text fields in an array for submit check
+    const inputGroup = [
+        nameInput,
+        emailInput,
+        ccNumber,
+        ccZip,
+        ccCVV
+    ];
+    // Get array of all activity checkboxes for submit check
+    const activitiesGroup = activitiesBox.querySelectorAll("input");
+    // Show validation error for every text input that is still empty
+    inputGroup.forEach((input) => {
+        if (input.value === "") {
+            validStyle(input.parentElement, false);
+            valid = false;
+        }
+    });
+    // Turn nodelist to an array and show validation error if none of the inputs are checked
+    if (Array.from(activitiesGroup).every((checkBox) => checkBox.checked === false)) {
+        validStyle(activitiesBox.parentElement, false);
+        valid = false;
+    }
+    if (!valid) {
+        event.preventDefault();
+    }
+});
