@@ -40,6 +40,7 @@ designSelection.addEventListener("change", event => {
 
     // On any change, enable the Color selection menu
     colorSelection.disabled = false;
+
     let colorsActive = [];
     for (let i = 0; i < colorOptions.length; i++) {
         const color = colorOptions[i];
@@ -101,6 +102,7 @@ document.querySelector("#activities").addEventListener("change", function () {
             changeActivityDisable(activities, false);
         }
     });
+
     totalCostDisplay.textContent = `Total: $${totalCost}`;
 });
 
@@ -137,7 +139,7 @@ document.querySelector("#payment").addEventListener("change", event => {
 //     Validation   //
 // ================ //
 
-// Grab 
+// Grab form and required inputs
 const form = document.querySelector("form");
 const nameInput = document.querySelector("#name");
 const emailInput = document.querySelector("#email");
@@ -179,42 +181,41 @@ const errorDisplayText = (value, regex, noLengthMsg, badStringMsg) => {
 };
 
 let isValid;
-
 // Validation checks on keyup in required text fields
 form.addEventListener("keyup", ({ target }) => {
     const validInputTargets = [
         {
             input: nameInput,
             regex: /^\S/,
-            errorHint: (value, regex) => {
+            errorHint(value, regex) {
                 return errorDisplayText(value, regex, "Please enter your name.", "Your name can not begin or only contain spaces.");
             }
         },
         {
             input: emailInput,
             regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/i,
-            errorHint: (value, regex) => {
+            errorHint(value, regex) {
                 return errorDisplayText(value, regex, "Please enter your email address.", "Your email address needs to have the correct format.");
             }
         },
         {
             input: ccNumber,
             regex: /^[0-9]{13,16}$/,
-            errorHint: (value, regex) => {
+            errorHint(value, regex) {
                 return errorDisplayText(value, regex, "Please Enter a Credit Card Number", "Not a valid Credit Card Number");
             }
         },
         {
             input: ccZip,
             regex: /^[0-9]{5}$/,
-            errorHint: (value, regex) => {
+            errorHint(value, regex) {
                 return errorDisplayText(value, regex, "Please Enter the Zip Code for the Credit Card.", "Not a valid Zip Code.");
             }
         },
         {
             input: ccCVV,
             regex: /^[0-9]{3}$/,
-            errorHint: (value, regex) => {
+            errorHint(value, regex) {
                 return errorDisplayText(value, regex, "Please Enter The Credit Card's Security Code", "Not a Valid Credit Card Security Code.");
             }
         }
@@ -246,11 +247,11 @@ form.addEventListener("submit", event => {
     // Show validation error for every text input that is still empty
     inputGroup.forEach((input) => {
         if (input.value === "") {
-            validStyle(input.parentElement, false);
+            validStyle(input.parentElement, false, "Required field empty.");
             isValid = false;
         }
     });
-
+    
     // Turn nodelist to an array and show validation error if none of the inputs are checked
     if (Array.from(activitiesGroup).every((checkBox) => checkBox.checked === false)) {
         validStyle(activitiesBox.parentElement, false);
