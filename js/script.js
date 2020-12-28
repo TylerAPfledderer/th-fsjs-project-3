@@ -1,14 +1,12 @@
-// --- Variables --- //
+// --- Global Variables --- //
 const otherJobRole = document.querySelector("#other-job-role");
 const titleSelection = document.querySelector("#title");
 const colorSelection = document.querySelector("#color");
-const colorOptions = colorSelection.querySelectorAll("option");
 
 // Grab the Credit Card, Paypal and Bitcoin displays
 const creditcardDisplay = document.querySelector("#credit-card");
 const paypalDisplay = document.querySelector("#paypal");
 const bitcoinDisplay = document.querySelector("#bitcoin");
-const paymentDisplays = [creditcardDisplay, paypalDisplay, bitcoinDisplay];
 
 // Grab form and required inputs
 const form = document.querySelector("form");
@@ -20,7 +18,6 @@ const ccInput = {
   ccZip: document.querySelector("#zip"),
   ccCVV: document.querySelector("#cvv"),
 };
-const { ccNumber, ccZip, ccCVV } = ccInput;
 
 // --- Functions --- //
 
@@ -78,6 +75,8 @@ document.querySelector("#design").addEventListener("change", (event) => {
 
   // On any change, enable the Color selection menu
   colorSelection.disabled = false;
+
+  const colorOptions = colorSelection.querySelectorAll("option");
 
   let colorsActive = [];
   for (let i = 0; i < colorOptions.length; i++) {
@@ -163,8 +162,9 @@ paypalDisplay.hidden = true;
 bitcoinDisplay.hidden = true;
 
 // Check for changes on the payment method
-document.querySelector("#payment").addEventListener("change", (event) => {
-  const target = event.target;
+document.querySelector("#payment").addEventListener("change", ({target}) => {
+  
+  const paymentDisplays = [creditcardDisplay, paypalDisplay, bitcoinDisplay];
   paymentDisplays.forEach((display) => {
     if (display.className === target.value) {
       display.hidden = false;
@@ -189,6 +189,7 @@ const errorDisplayText = (value, regex, noLengthMsg, badStringMsg) => {
 };
 // Validation checks on keyup in required text fields
 form.addEventListener("keyup", ({ target }) => {
+  const { ccNumber, ccZip, ccCVV } = ccInput;
   const validInputTargets = [
     {
       input: nameInput,
@@ -263,6 +264,7 @@ form.addEventListener("keyup", ({ target }) => {
 
 // Validation checks on submit
 form.addEventListener("submit", (event) => {
+  const { ccNumber, ccZip, ccCVV } = ccInput;
   // Store text fields in an array for submit check
   const inputGroup = [nameInput, emailInput, ccNumber, ccZip, ccCVV];
 
